@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  @apply bg-cream text-ink font-body antialiased;
+  margin: 0;
+}
+
+/* Paper grain texture overlay */
+.grain::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.pixelated { image-rendering: pixelated; }
+
+.btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-pill font-display font-bold transition-all duration-200 select-none;
+}
+.btn-primary {
+  @apply bg-forest text-cream px-7 py-3.5 shadow-soft hover:bg-forestDark hover:-translate-y-0.5 active:translate-y-0;
+}
+.btn-ghost {
+  @apply bg-white/60 text-ink px-6 py-3.5 border border-ink/10 hover:bg-white;
+}
+
+.section { @apply relative mx-auto w-full max-w-6xl px-5 sm:px-8; }
+
+::selection { background: #F2B33D; color: #2A2118; }

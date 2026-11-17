@@ -4,7 +4,7 @@ import type { Derived, Expression, PetState } from './types'
 const HOUR = 3600_000
 const clamp = (n: number) => Math.max(CONFIG.decay.floor, Math.min(CONFIG.maxStat, n))
 
-// 按时间结算状态衰减
+// 依据真实经过时间结算心情 / 饱腹度衰减（无死亡 / 无惩罚，有下限）
 export function applyDecay(state: PetState, now = Date.now()): PetState {
   const hours = Math.max(0, (now - state.lastDecay) / HOUR)
   if (hours <= 0) return { ...state, lastDecay: now }

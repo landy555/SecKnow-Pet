@@ -20,6 +20,7 @@ const P = {
 }
 type C = keyof typeof P
 
+// 猫头鹰：按参考图 20x24 逐格还原，绿色映射为橙色；幼年 / 成年共用同一形状，仅缩放区分。
 const OWL_BASE: string[] = [
   '...A............A...',
   '...AA..........AA...',
@@ -103,7 +104,7 @@ interface Face {
   blush?: { x: number; y: number }[]
 }
 
-// 眼睛 / 腮红坐标（网格单位）
+// 眼睛 / 腮红坐标（网格单位）按种类与阶段配置，避免硬编码错位。
 const OWL_FACE: Face = { lx: 5, rx: 14, cy: 7, blush: [{ x: 3, y: 9 }, { x: 16, y: 9 }] }
 const FACE: Record<PetSpecies, Partial<Record<StageId, Face>>> = {
   owl: {

@@ -1,5 +1,6 @@
 import type { Derived, PetState } from './types'
 
+// 温暖、无负罪感 / 无恐惧的对话
 const LINES: Record<string, string[]> = {
   happy: ['今天也一起学习吧！', '和你在一起，我变得更强啦～', '你认真的样子，我都看在眼里！'],
   neutral: ['我准备好啦，想学点什么？', '慢慢来，我会一直陪着你。', '今天想探索哪个知识点呢？'],

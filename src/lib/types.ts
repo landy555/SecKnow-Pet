@@ -10,6 +10,8 @@ export interface LessonRecord {
   at: number
 }
 
+export type PetSpecies = 'owl' | 'frog'
+
 export interface PetState {
   xp: number
   mood: number
@@ -20,6 +22,7 @@ export interface PetState {
   createdAt: number
   records: LessonRecord[]
   claimed: boolean // 是否已领取小伙伴
+  species: PetSpecies
   name: string
 }
 

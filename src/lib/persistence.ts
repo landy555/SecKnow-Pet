@@ -12,6 +12,7 @@ export function freshState(now = Date.now()): PetState {
     createdAt: now,
     records: [],
     claimed: false,
+    species: 'owl',
     name: '小知',
   }
 }

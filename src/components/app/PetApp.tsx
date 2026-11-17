@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import type { PetApi } from '../../hooks/usePet'
+import type { PetSpecies } from '../../lib/types'
 import Character from '../character/Character'
 import Learning from './Learning'
 import DebugPanel from './DebugPanel'
@@ -31,6 +32,12 @@ export default function PetApp({ api, onHome }: { api: PetApi; onHome: () => voi
     feed()
     setBounce((b) => b + 1)
     setLine(feedLine())
+  }
+  function doClaim(choice: PetSpecies | 'random') {
+    const got = claim(choice)
+    setBounce((b) => b + 1)
+    const intro = got === 'owl' ? '一只小猫头鹰' : '一只小蝌蚪（长大就是青蛙啦）'
+    setLine(choice === 'random' ? `盲盒开启！恭喜抽中${intro}，我一直期待和你见面。` : `欢迎${intro}！我一直期待和你见面。`)
   }
 
   return (
@@ -68,7 +75,7 @@ export default function PetApp({ api, onHome }: { api: PetApi; onHome: () => voi
               className="cursor-pointer"
               aria-label="抚摸宠物"
             >
-              <Character stage={derived.stageId} expression={derived.expression} size={200} />
+              <Character stage={derived.stageId} expression={derived.expression} size={200} species={state.species} />
             </motion.button>
             <div className="mt-2 font-display text-xl font-extrabold">{state.name} · {derived.stageName}</div>
 
@@ -137,11 +144,23 @@ export default function PetApp({ api, onHome }: { api: PetApi; onHome: () => voi
       <AnimatePresence>
         {!state.claimed && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[65] grid place-items-center bg-ink/40 p-6 backdrop-blur-sm">
-            <motion.div initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }} className="w-full max-w-sm rounded-[2rem] bg-cream p-8 text-center shadow-card">
-              <Character stage="egg" expression="happy" size={130} className="mx-auto" />
-              <h2 className="mt-4 font-display text-2xl font-extrabold">一颗蛋在等你！</h2>
-              <p className="mt-2 text-sm font-semibold text-inkSoft">领养你的像素小伙伴，认真学习就能孵出它、陪它长大。</p>
-              <button onClick={() => { claim(); setLine('欢迎回来！我一直期待和你见面。') }} className="btn btn-primary mt-6 w-full">领取我的小伙伴 →</button>
+            <motion.div initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }} className="w-full max-w-md rounded-[2rem] bg-cream p-8 text-center shadow-card">
+              <h2 className="font-display text-2xl font-extrabold">挑一只小伙伴吧！</h2>
+              <p className="mt-2 text-sm font-semibold text-inkSoft">领养你的像素伙伴，认真学习就能孵出它、陪它长大。</p>
+              <div className="mt-6 grid grid-cols-3 gap-3">
+                <ClaimCard label="猫头鹰" desc="博学的夜行者" onClick={() => doClaim('owl')}>
+                  <Character species="owl" stage="baby" expression="happy" size={72} float={false} className="mx-auto" />
+                </ClaimCard>
+                <ClaimCard label="青蛙" desc="从蝌蚪长大" onClick={() => doClaim('frog')}>
+                  <Character species="frog" stage="baby" expression="happy" size={72} float={false} className="mx-auto" />
+                </ClaimCard>
+                <ClaimCard label="盲盒" desc="随机惊喜？" onClick={() => doClaim('random')}>
+                  <div className="relative mx-auto" style={{ width: 72 }}>
+                    <Character stage="egg" expression="happy" size={72} float={false} />
+                    <span className="absolute inset-0 grid place-items-center font-display text-3xl font-extrabold text-ink">?</span>
+                  </div>
+                </ClaimCard>
+              </div>
             </motion.div>
           </motion.div>
         )}
@@ -183,4 +202,11 @@ const Action = ({ onClick, children }: { onClick: () => void; children: React.Re
 )
 const TabBtn = ({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) => (
   <button onClick={onClick} className={`rounded-pill px-5 py-2 text-sm font-extrabold transition ${active ? 'bg-forest text-cream' : 'bg-white/70 text-inkSoft'}`}>{children}</button>
+)
+const ClaimCard = ({ label, desc, onClick, children }: { label: string; desc: string; onClick: () => void; children: React.ReactNode }) => (
+  <button onClick={onClick} className="rounded-[1.5rem] border border-ink/10 bg-white/70 p-4 shadow-soft transition hover:-translate-y-0.5 hover:bg-white">
+    <div className="grid h-24 place-items-center">{children}</div>
+    <div className="mt-2 font-display text-sm font-extrabold">{label}</div>
+    <div className="mt-0.5 text-xs font-bold text-inkSoft">{desc}</div>
+  </button>
 )

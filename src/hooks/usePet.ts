@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { CONFIG } from '../config/config'
 import * as P from '../lib/persistence'
 import * as L from '../lib/logic'
-import type { PetState } from '../lib/types'
+import type { PetSpecies, PetState } from '../lib/types'
 
 export function usePet() {
   const [state, setState] = useState<PetState>(() => L.applyDecay(P.load()))
@@ -29,7 +29,11 @@ export function usePet() {
 
   const pet = useCallback(() => setState((s) => L.pet(s)), [])
   const feed = useCallback(() => setState((s) => L.feed(s)), [])
-  const claim = useCallback(() => setState((s) => ({ ...s, claimed: true, lastVisit: Date.now(), lastDecay: Date.now() })), [])
+  const claim = useCallback((choice: PetSpecies | 'random' = 'owl') => {
+    const species: PetSpecies = choice === 'random' ? (Math.random() < 0.5 ? 'owl' : 'frog') : choice
+    setState((s) => ({ ...s, species, claimed: true, lastVisit: Date.now(), lastDecay: Date.now() }))
+    return species
+  }, [])
 
   const finishLesson = useCallback(
     (lesson: { id: string; title: string; subject: string }, correct: number, total: number) => {

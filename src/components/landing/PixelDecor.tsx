@@ -1,6 +1,5 @@
 import { motion } from 'framer-motion'
 
-// 像素装饰：星星 / 加号 / 方块，首页的漂浮像素元素
 export function PixelStar({ className = '', color = '#F2B33D', size = 28 }: { className?: string; color?: string; size?: number }) {
   return (
     <svg viewBox="0 0 7 7" width={size} height={size} className={`pixelated ${className}`} shapeRendering="crispEdges">
